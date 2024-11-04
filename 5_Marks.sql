@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS Result (
 );
 
 INSERT INTO Stud_Marks (name, total_marks) VALUES
-    ('Om', 1450),
-    ('Manav', 950),
-    ('Kartik', 875),
+    ('Om', 1200),
+    ('Manav', 940),
+    ('Kartik', 850),
     ('Aryaan', 800);
 
 --The proc_Grade procedure will categorize students based on their marks.
