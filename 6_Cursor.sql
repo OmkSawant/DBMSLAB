@@ -16,15 +16,16 @@ INSERT INTO o_rollcall (rno, name, addr) VALUES
 (3, 'Kartik', 'Mumbai'),
 (4, 'Aryaan', 'Delhi');
 
-INSERT INTO r_rollcall (rno, name, addr) VALUES
+INSERT INTO n_rollcall (rno, name, addr) VALUES
 (1, 'Om', 'Nashik'),
 (2, 'Manav', 'Pune'),
 (3, 'Kartik', 'Mumbai');
 
+SELECT * FROM o_rollcall;
+SELECT * FROM n_rollcall;
 
 delimiter //
-
-create procedure n4(IN rno1 int)
+create procedure merge(IN rno1 int)
 begin
 declare rno2 int;
 declare exit_cond boolean;
@@ -46,4 +47,6 @@ end;
 
 delimiter ;
 
-call n4(3);
+call merge(3);
+
+SELECT * FROM n_rollcall;
