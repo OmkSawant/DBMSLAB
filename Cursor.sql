@@ -1,4 +1,29 @@
+CREATE TABLE o_rollcall (
+rno INT PRIMARY KEY,
+name VARCHAR(20),
+addr VARCHAR(40)
+);
+
+CREATE TABLE n_rollcall (
+rno INT ,
+name VARCHAR(20),
+addr VARCHAR(40)
+);
+
+INSERT INTO o_rollcall (rno, name, addr) VALUES
+(1, 'Om', 'Nashik'),
+(2, 'Manav', 'Pune'),
+(3, 'Kartik', 'Mumbai'),
+(4, 'Aryaan', 'Delhi');
+
+INSERT INTO r_rollcall (rno, name, addr) VALUES
+(1, 'Om', 'Nashik'),
+(2, 'Manav', 'Pune'),
+(3, 'Kartik', 'Mumbai');
+
+
 delimiter //
+
 create procedure n4(IN rno1 int)
 begin
 declare rno2 int;
@@ -19,3 +44,6 @@ end loop l1;
 end;
 //
 
+delimiter ;
+
+call n4(3);
