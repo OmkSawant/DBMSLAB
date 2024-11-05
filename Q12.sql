@@ -1,3 +1,9 @@
+mongo -- for ubantu
+
+USE db
+
+db.createCollection("employees")
+
 db.employees.insertMany([
    { employee_id: 1, first_name: "John", last_name: "Doe", department: "IT", salary: 60000, hire_date: new Date("2021-05-15"), position: "Software Engineer" },
    { employee_id: 2, first_name: "Jane", last_name: "Smith", department: "HR", salary: 55000, hire_date: new Date("2020-03-10"), position: "HR Specialist" },
