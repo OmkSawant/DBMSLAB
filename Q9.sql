@@ -1,80 +1,62 @@
-CREATE DATABASE pract5;
-
-USE pract5;
-
-CREATE TABLE IF NOT EXISTS Stud_Marks (
-    name VARCHAR(255),
-    total_marks INT
+create table marks(
+	roll_no int,
+	name varchar(20),
+	total_marks varchar(20)
+);
+create table result(
+	roll_no int,
+	name varchar(20),
+	class varchar(20)
 );
 
-CREATE TABLE IF NOT EXISTS Result (
-    Roll INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(255),
-    Class VARCHAR(50)
-);
+INSERT INTO marks (roll_no, name, total_marks) VALUES
+(1, 'Abhishek', 1400),
+(2, 'Karan', 980),
+(3, 'Baliram', 880),
+(4, 'Vishwa', 820),
+(5, 'Amit', 740),
+(6, 'Shrinath', 640);
 
-INSERT INTO Stud_Marks (name, total_marks) VALUES
-    ('Om', 1200),
-    ('Manav', 940),
-    ('Kartik', 850),
-    ('Aryaan', 800);
+DROP PROCEDURE IF EXISTS proc_result;
+DROP FUNCTION IF EXISTS final_result;
 
---The proc_Grade procedure will categorize students based on their marks.
-DELIMITER //
+delimiter //
+create procedure proc_result(in marks int, out class char(20))
+begin
 
-CREATE PROCEDURE proc_Grade (
-    IN student_name VARCHAR(255),
-    IN total_marks INT
-)
-BEGIN
-    DECLARE grade_class VARCHAR(50);
+IF (marks >= 990 AND marks < 1500) THEN
+SET class = 'Distinction';
 
-    -- Determine grade category based on total marks
-    IF total_marks BETWEEN 990 AND 1500 THEN
-        SET grade_class = 'Distinction';
-    ELSEIF total_marks BETWEEN 900 AND 989 THEN
-        SET grade_class = 'First Class';
-    ELSEIF total_marks BETWEEN 825 AND 899 THEN
-        SET grade_class = 'Higher Second Class';
-    ELSE
-        SET grade_class = 'No Category';
-    END IF;
 
-    -- Insert result into Result table
-    INSERT INTO Result (Name, Class) VALUES (student_name, grade_class);
+ELSEIF (marks >= 900 AND marks < 989) THEN
+SET class = 'First Class';
+
+
+ELSEIF (marks >= 825 AND marks < 899) THEN
+SET class = 'Higher Second Class';
+
+ELSE
+SET class = 'Fail';
+
+END IF;
 END //
-
 DELIMITER ;
 
---The following SQL block fetches each student's data from Stud_Marks, calls proc_Grade to categorize them, and stores the result in Result.
 DELIMITER //
+CREATE FUNCTION final_result(R1 INT)
+RETURNS CHAR(20)
+DETERMINISTIC
 
-CREATE PROCEDURE categorize_students()
 BEGIN
-    DECLARE student_name VARCHAR(255);
-    DECLARE total_marks INT;
-    DECLARE done INT DEFAULT 0;
-    DECLARE stud_cursor CURSOR FOR SELECT name, total_marks FROM Stud_Marks;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+DECLARE fmarks INT;
+DECLARE grade CHAR(20);
 
-    -- Open cursor to process each student
-    OPEN stud_cursor;
-    read_loop: LOOP
-        FETCH stud_cursor INTO student_name, total_marks;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
+SELECT total_marks INTO fmarks FROM marks WHERE roll_no = R1;
 
-        -- Call the procedure with the student's data
-        CALL proc_Grade(student_name, total_marks);
-    END LOOP;
+CALL proc_result(fmarks, grade);
 
-    -- Close cursor
-    CLOSE stud_cursor;
+RETURN grade;
 END //
-
 DELIMITER ;
 
-CALL categorize_students();
-
-SELECT * FROM Result;
+SELECT roll_no, name, final_result(roll_no) AS class FROM marks;
